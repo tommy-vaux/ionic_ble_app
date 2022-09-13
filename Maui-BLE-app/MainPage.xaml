@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Maui_BLE_app.Models"
              x:Class="Maui_BLE_app.MainPage">
-
+    <ContentPage.BindingContext>
+        <models:BLE_List_Device/>
+    </ContentPage.BindingContext>
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
@@ -15,24 +18,28 @@
                 HeightRequest="200"
                 HorizontalOptions="Center" />
 
-            <Label
-                Text="Hello, World!"
+                        <Label
+                Text="Devices Found"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
 
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
+                <ListView x:Name="DeviceList" ItemsSource="{Binding Devices}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding Name}"/>
+                            <Label Text="{Binding Address}"/>
+                        </StackLayout>
+                    </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                        <Button
+                x:Name="discoverBtn"
+                Text="Refresh Devices"
+                SemanticProperties.Hint="Re-runs BLE Refresh"
+                Clicked="OnDiscoverClicked"
                 HorizontalOptions="Center" />
 
         </VerticalStackLayout>
