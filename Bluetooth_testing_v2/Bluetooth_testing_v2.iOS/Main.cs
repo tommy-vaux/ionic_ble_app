@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using UIKit;
 
-using Foundation;
-using UIKit;
-
-namespace Bluetooth_testing_v2.iOS
+namespace BLE.Client.iOS
 {
     public class Application
     {
@@ -14,7 +9,7 @@ namespace Bluetooth_testing_v2.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
-            UIApplication.Main(args, null, typeof(AppDelegate));
+            UIApplication.Main(args, null, "AppDelegate");
         }
     }
 }

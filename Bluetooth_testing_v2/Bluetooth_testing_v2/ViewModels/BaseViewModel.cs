@@ -1,54 +1,92 @@
-﻿using Bluetooth_testing_v2.Models;
-using Bluetooth_testing_v2.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Xamarin.Forms;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MvvmCross;
+using MvvmCross.Logging;
+using MvvmCross.ViewModels;
+using Plugin.BLE.Abstractions;
+using Plugin.BLE.Abstractions.Contracts;
 
-namespace Bluetooth_testing_v2.ViewModels
+namespace BLE.Client.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : MvxViewModel<MvxBundle>
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        protected readonly IAdapter Adapter;
+        protected const string DeviceIdKey = "DeviceIdNavigationKey";
+        protected const string ServiceIdKey = "ServiceIdNavigationKey";
+        protected const string CharacteristicIdKey = "CharacteristicIdNavigationKey";
+        protected const string DescriptorIdKey = "DescriptorIdNavigationKey";
 
-        bool isBusy = false;
-        public bool IsBusy
+        private readonly ILogger<BaseViewModel> _log;
+
+        public BaseViewModel(IAdapter adapter)
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
+            Adapter = adapter;
+            Mvx.IoCProvider.TryResolve(out _log);
         }
 
-        string title = string.Empty;
-        public string Title
+        public override void ViewAppeared()
         {
-            get { return title; }
-            set { SetProperty(ref title, value); }
+            _log?.LogTrace("ViewAppeared {0}", GetType().Name);
         }
 
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
+        public override void ViewDisappeared()
         {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
+            _log?.LogTrace("ViewDisappeared {0}", GetType().Name);
         }
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        public override void Prepare(MvxBundle parameters)
         {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Bundle = parameters;
         }
-        #endregion
+
+        protected IMvxBundle Bundle { get; private set; }
+
+        protected IDevice GetDeviceFromBundle(IMvxBundle parameters)
+        {
+            if (!parameters.Data.ContainsKey(DeviceIdKey)) return null;
+            var deviceId = parameters.Data[DeviceIdKey];
+
+            return Adapter.ConnectedDevices.FirstOrDefault(d => d.Id.ToString().Equals(deviceId));
+
+        }
+
+        protected Task<IService> GetServiceFromBundleAsync(IMvxBundle parameters)
+        {
+
+            var device = GetDeviceFromBundle(parameters);
+            if (device == null || !parameters.Data.ContainsKey(ServiceIdKey))
+            {
+                return Task.FromResult<IService>(null);
+            }
+
+            var serviceId = parameters.Data[ServiceIdKey];
+            return device.GetServiceAsync(Guid.Parse(serviceId));
+        }
+
+        protected async Task<ICharacteristic> GetCharacteristicFromBundleAsync(IMvxBundle parameters)
+        {
+            var service = await GetServiceFromBundleAsync(parameters);
+            if (service == null || !parameters.Data.ContainsKey(CharacteristicIdKey))
+            {
+                return null;
+            }
+
+            var characteristicId = parameters.Data[CharacteristicIdKey];
+            return await service.GetCharacteristicAsync(Guid.Parse(characteristicId));
+        }
+
+        protected async Task<IDescriptor> GetDescriptorFromBundleAsync(IMvxBundle parameters)
+        {
+            var characteristic = await GetCharacteristicFromBundleAsync(parameters);
+            if (characteristic == null || !parameters.Data.ContainsKey(DescriptorIdKey))
+            {
+                return null;
+            }
+
+            var descriptorId = parameters.Data[DescriptorIdKey];
+            return await characteristic.GetDescriptorAsync(Guid.Parse(descriptorId));
+        }
     }
 }

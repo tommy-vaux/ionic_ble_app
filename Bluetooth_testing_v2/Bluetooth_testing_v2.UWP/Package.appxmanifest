@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="E1408A73-BDE0-478C-9F61-DB93E375AB32"
-    Publisher="CN=FA48CB13-6201-4FE7-A765-D7E8E7AC9F47"
+    Name="94efadeb-c35f-4e8b-8771-0e583097454c"
+    Publisher="CN=Adrian"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="94efadeb-c35f-4e8b-8771-0e583097454c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Bluetooth_testing_v2.UWP</DisplayName>
-    <PublisherDisplayName>FA48CB13-6201-4FE7-A765-D7E8E7AC9F47</PublisherDisplayName>
+    <DisplayName>BLE.Client.UWP</DisplayName>
+    <PublisherDisplayName>Adrian</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,20 +30,14 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Bluetooth_testing_v2.UWP.App">
+      EntryPoint="BLE.Client.UWP.App">
       <uap:VisualElements
-        DisplayName="Bluetooth_testing_v2.UWP"
+        DisplayName="BLE.Client.UWP"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Bluetooth_testing_v2.UWP"
+        Description="BLE.Client.UWP"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo" />
-            <uap:ShowOn Tile="wide310x150Logo" />
-            <uap:ShowOn Tile="square310x310Logo" />
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
@@ -51,5 +45,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="bluetooth" />
   </Capabilities>
 </Package>
