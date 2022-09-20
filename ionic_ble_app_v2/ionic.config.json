@@ -1,0 +1,7 @@
+{
+  "name": "ble-test",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
