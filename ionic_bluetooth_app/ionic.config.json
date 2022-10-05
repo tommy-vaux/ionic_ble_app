@@ -1,7 +1,0 @@
-{
-  "name": "bluetooth-test",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}
