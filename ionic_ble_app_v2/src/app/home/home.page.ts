@@ -20,6 +20,9 @@ export class HomePage {
   devices:any[] = []; // create an empty array to store the found devices in, a value tied to the HomePage class (like self.devices in python)
   selectedColor = 0;
 
+  ble_btn_text : string = "Connect";
+  ble_not_connected : boolean = true; // needs to be 'true' to disable the components used.
+
   target = "D2:E8:AF:EE:B8:77";
 
   constructor(private ble: BLE, private ngZone: NgZone, public toastController: ToastController, private alertController: AlertController, private loadingController : LoadingController) {
@@ -41,8 +44,23 @@ export class HomePage {
     const loading = await this.loadingController.create({
       message: "Connecting to Device...",
     });
-    this.ble.connect(this.target).subscribe(deviceData => this.connectionSuccessful(deviceData, loading), deviceData => this.connectionFailed(deviceData, loading));
-    loading.present();
+
+    if(this.ble_btn_text == "Connect") {
+      this.ble.connect(this.target).subscribe(deviceData => this.connectionSuccessful(deviceData, loading), deviceData => this.connectionFailed(deviceData, loading));
+      loading.present();
+      this.ble_btn_text = "Disconnect"
+    } else {
+      this.ble.disconnect(this.target);
+      this.toastController.create({
+        color: 'dark',
+        duration: 1000,
+        message: "Device Disconnected.",
+      }).then(toast => {
+        toast.present();
+      });
+      this.ble_btn_text = "Connect"
+      this.ble_not_connected = true;
+    }
   }
 
   ApplyColor() {
@@ -54,6 +72,7 @@ export class HomePage {
   }
 
   connectionSuccessful(deviceData, loading) {
+    this.ble_not_connected = false;
     loading.dismiss();
     console.log("Connected to device successfully! Data: " + JSON.stringify(deviceData, null, 2));
     this.toastController.create({
@@ -66,6 +85,7 @@ export class HomePage {
   }
 
   async connectionFailed(deviceData, loading) {
+    this.ble_not_connected = true;
     loading.dismiss();
     console.log("Connection Failed! ERROR: " + JSON.stringify(deviceData, null, 2));
     const alert = await this.alertController.create({

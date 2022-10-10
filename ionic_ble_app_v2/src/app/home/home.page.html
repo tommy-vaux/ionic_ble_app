@@ -14,11 +14,11 @@
   <ion-label> Device to Control: <b> Arduino RGB </b></ion-label>
   <ion-button expand="block" (click)="Connect()">
     <ion-icon name="Bluetooth"></ion-icon>
-    <p>Connect</p>
+    {{ble_btn_text}}
   </ion-button>
   <ion-item class="ion-padding">
     <ion-label> Select Light Color </ion-label>
-    <ion-select placeholder="Select Color" okText="Apply" cancelText="Cancel"
+    <ion-select placeholder="Select Color" okText="Apply" cancelText="Cancel" disabled="{{ble_not_connected}}"
     (ionChange)="handleColorSelection($event)">
       <ion-select-option value="0">Off</ion-select-option>
       <ion-select-option value="1">Red</ion-select-option>
