@@ -1,21 +1,91 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      BLE Scanner
+      BLE Ctrl App
     </ion-title>
-    <ion-button (click)="Scan()" slot="end">
+    <!--<ion-button (click)="Scan()" slot="end">
       <ion-icon name="Bluetooth"></ion-icon>
       <p>Scan</p>
-    </ion-button>
+    </ion-button>-->
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-card-content ion-item *ngFor="let device of devices">
-      <p>{{device.name || 'Unnamed'}}</p>
-      <p>{{device.id}}</p>
-      <p>RSSI: {{device.rssi}}</p>
-    </ion-card-content>
-  </ion-list>
+<ion-content class="ion-padding">
+  <ion-button (click)="Connect()">
+    <ion-icon name="Bluetooth"></ion-icon>
+    <p>Connect</p>
+  </ion-button>
+  <ion-select placeholder="Select Color"
+  (ionChange)="handleColorSelection($event)">
+    <ion-select-option value="0">Off</ion-select-option>
+    <ion-select-option value="1">Red</ion-select-option>
+    <ion-select-option value="2">Green</ion-select-option>
+    <ion-select-option value="3">Yellow</ion-select-option>
+    <ion-select-option value="4">Blue</ion-select-option>
+    <ion-select-option value="5">Purple</ion-select-option>
+    <ion-select-option value="6">Cyan</ion-select-option>
+    <ion-select-option value="7">White</ion-select-option>
+  </ion-select>
+  <ion-button (click)="ApplyColor()">
+    <p>Apply</p>
+  </ion-button>
 </ion-content>
+
+<!--<ion-tabs>
+    <ion-tab tab="discover">
+      <ion-header translucent>
+        <ion-toolbar>
+          <ion-title> Discover </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-card-content ion-item *ngFor="let device of devices">
+            <p>{{device.name || 'Unnamed'}}</p>
+            <p>{{device.id}}</p>
+            <p>RSSI: {{device.rssi}}</p>
+          </ion-card-content>
+        </ion-list>
+      </ion-content>
+    </ion-tab>
+    
+    <ion-tab tab="control">
+      <ion-header translucent>
+        <ion-toolbar>
+          <ion-title> Control Light </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-button (click)="Connect()">
+          <ion-icon name="Bluetooth"></ion-icon>
+          <p>Connect</p>
+        </ion-button>
+        <ion-select placeholder="Select Color">
+          <ion-select-option value="0">Off</ion-select-option>
+          <ion-select-option value="1">Red</ion-select-option>
+          <ion-select-option value="2">Green</ion-select-option>
+          <ion-select-option value="3">Yellow</ion-select-option>
+          <ion-select-option value="4">Blue</ion-select-option>
+          <ion-select-option value="5">Purple</ion-select-option>
+          <ion-select-option value="6">Cyan</ion-select-option>
+          <ion-select-option value="7">White</ion-select-option>
+        </ion-select>
+        <ion-button (click)="ApplyColor()">
+          <p>Apply</p>
+        </ion-button>
+      </ion-content>
+      
+    </ion-tab>
+
+    <ion-tab-bar slot="bottom">   
+      <ion-tab-button tab="discover">
+        <ion-icon name="wifi-outline"></ion-icon>
+        <ion-label> Discover </ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="control">
+        <ion-icon name="sunny-outline"></ion-icon>
+        <ion-label> Control Light </ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+</ion-tabs>-->
