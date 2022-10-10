@@ -48,7 +48,6 @@ export class HomePage {
     if(this.ble_btn_text == "Connect") {
       this.ble.connect(this.target).subscribe(deviceData => this.connectionSuccessful(deviceData, loading), deviceData => this.connectionFailed(deviceData, loading));
       loading.present();
-      this.ble_btn_text = "Disconnect"
     } else {
       this.ble.disconnect(this.target);
       this.toastController.create({
@@ -73,6 +72,7 @@ export class HomePage {
 
   connectionSuccessful(deviceData, loading) {
     this.ble_not_connected = false;
+    this.ble_btn_text = "Disconnect"
     loading.dismiss();
     console.log("Connected to device successfully! Data: " + JSON.stringify(deviceData, null, 2));
     this.toastController.create({
