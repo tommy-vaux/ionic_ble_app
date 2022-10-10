@@ -11,24 +11,30 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-button (click)="Connect()">
+  <ion-label> Device to Control: <b> Arduino RGB </b></ion-label>
+  <ion-button expand="block" (click)="Connect()">
     <ion-icon name="Bluetooth"></ion-icon>
     <p>Connect</p>
   </ion-button>
-  <ion-select placeholder="Select Color"
-  (ionChange)="handleColorSelection($event)">
-    <ion-select-option value="0">Off</ion-select-option>
-    <ion-select-option value="1">Red</ion-select-option>
-    <ion-select-option value="2">Green</ion-select-option>
-    <ion-select-option value="3">Yellow</ion-select-option>
-    <ion-select-option value="4">Blue</ion-select-option>
-    <ion-select-option value="5">Purple</ion-select-option>
-    <ion-select-option value="6">Cyan</ion-select-option>
-    <ion-select-option value="7">White</ion-select-option>
-  </ion-select>
-  <ion-button (click)="ApplyColor()">
+  <ion-item class="ion-padding">
+    <ion-label> Select Light Color </ion-label>
+    <ion-select placeholder="Select Color" okText="Apply" cancelText="Cancel"
+    (ionChange)="handleColorSelection($event)">
+      <ion-select-option value="0">Off</ion-select-option>
+      <ion-select-option value="1">Red</ion-select-option>
+      <ion-select-option value="2">Green</ion-select-option>
+      <ion-select-option value="3">Yellow</ion-select-option>
+      <ion-select-option value="4">Blue</ion-select-option>
+      <ion-select-option value="5">Purple</ion-select-option>
+      <ion-select-option value="6">Cyan</ion-select-option>
+      <ion-select-option value="7">White</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!--<ion-button (click)="ApplyColor()">
     <p>Apply</p>
-  </ion-button>
+  </ion-button>-->
+  <!--<ion-toast-controller></ion-toast-controller>-->
 </ion-content>
 
 <!--<ion-tabs>
