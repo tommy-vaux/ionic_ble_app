@@ -23,6 +23,13 @@ export class HomePage {
   ble_btn_text : string = "Connect";
   ble_not_connected : boolean = true; // needs to be 'true' to disable the components used.
 
+  x_val = "None";
+  y_val = "None";
+  z_val = "None";
+
+  bpm_val = "None";
+  bol_val = "None";
+
   target = "D2:E8:AF:EE:B8:77";
 
   constructor(private ble: BLE, private ngZone: NgZone, public toastController: ToastController, private alertController: AlertController, private loadingController : LoadingController) {
@@ -69,6 +76,20 @@ export class HomePage {
     this.ble.write(this.target, "0045c100-00a5-521b-3fc2-a103645c1283", "0045c100-01a5-521b-3fc2-a103645c1283", final_packet.buffer);
 
   }
+
+  async GetLatestData() {
+    var decoder = new TextDecoder("utf-8");
+    console.log("Getting Latest Data from device");
+    //this.ble.read(this.target, "1800","2A00")//.subscribe(respData => function(respData) { this.x_val = respData.value; }, function(respData) { this.x_val = "ERROR"; });
+    this.x_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+    this.y_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+    this.z_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+    this.bpm_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+    this.bol_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+
+  }
+
+
 
   connectionSuccessful(deviceData, loading) {
     this.ble_not_connected = false;

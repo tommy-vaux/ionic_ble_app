@@ -1,97 +1,84 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      BLE Ctrl App
-    </ion-title>
-    <!--<ion-button (click)="Scan()" slot="end">
-      <ion-icon name="Bluetooth"></ion-icon>
-      <p>Scan</p>
-    </ion-button>-->
-  </ion-toolbar>
-</ion-header>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>John Smith</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>Movement Data</div>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <div> <br ></div>
+      </ion-row>
+      <ion-row>
+        <div> X: {{x_val}}</div>
+      </ion-row>
+      <ion-row>
+        <div> Y: {{y_val}}</div>
+      </ion-row>
+      <ion-row>
+        <div> Z: {{z_val}}</div>
+      </ion-row>  
+      <ion-row>
+        <div> Blood Pressure Data </div>
+      </ion-row>
+      <ion-row>
+        <div> BPM: {{bpm_val}}</div>
+      </ion-row>
+      <ion-row>
+        <div> BOL: {{bol_val}}</div>
+      </ion-row>
+    </ion-grid>
+    <ion-button expand="block" (click)="GetLatestData()"> Refresh </ion-button>
+    <ion-menu-toggle>
+      <ion-button>Click to return to menu</ion-button>
+    </ion-menu-toggle>
+  </ion-content>
+</ion-menu>
 
-<ion-content class="ion-padding">
-  <ion-label> Device to Control: <b> Arduino RGB </b></ion-label>
-  <ion-button expand="block" (click)="Connect()">
-    <ion-icon name="Bluetooth"></ion-icon>
-    {{ble_btn_text}}
-  </ion-button>
-  <ion-item class="ion-padding">
-    <ion-label> Select Light Color </ion-label>
-    <ion-select placeholder="Select Color" okText="Apply" cancelText="Cancel" disabled="{{ble_not_connected}}"
-    (ionChange)="handleColorSelection($event)">
-      <ion-select-option value="0">Off</ion-select-option>
-      <ion-select-option value="1">Red</ion-select-option>
-      <ion-select-option value="2">Green</ion-select-option>
-      <ion-select-option value="3">Yellow</ion-select-option>
-      <ion-select-option value="4">Blue</ion-select-option>
-      <ion-select-option value="5">Purple</ion-select-option>
-      <ion-select-option value="6">Cyan</ion-select-option>
-      <ion-select-option value="7">White</ion-select-option>
-    </ion-select>
-  </ion-item>
 
-  <!--<ion-button (click)="ApplyColor()">
-    <p>Apply</p>
-  </ion-button>-->
-  <!--<ion-toast-controller></ion-toast-controller>-->
-</ion-content>
-
-<!--<ion-tabs>
-    <ion-tab tab="discover">
-      <ion-header translucent>
-        <ion-toolbar>
-          <ion-title> Discover </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list>
-          <ion-card-content ion-item *ngFor="let device of devices">
-            <p>{{device.name || 'Unnamed'}}</p>
-            <p>{{device.id}}</p>
-            <p>RSSI: {{device.rssi}}</p>
-          </ion-card-content>
-        </ion-list>
-      </ion-content>
-    </ion-tab>
-    
-    <ion-tab tab="control">
-      <ion-header translucent>
-        <ion-toolbar>
-          <ion-title> Control Light </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-button (click)="Connect()">
-          <ion-icon name="Bluetooth"></ion-icon>
-          <p>Connect</p>
-        </ion-button>
-        <ion-select placeholder="Select Color">
-          <ion-select-option value="0">Off</ion-select-option>
-          <ion-select-option value="1">Red</ion-select-option>
-          <ion-select-option value="2">Green</ion-select-option>
-          <ion-select-option value="3">Yellow</ion-select-option>
-          <ion-select-option value="4">Blue</ion-select-option>
-          <ion-select-option value="5">Purple</ion-select-option>
-          <ion-select-option value="6">Cyan</ion-select-option>
-          <ion-select-option value="7">White</ion-select-option>
-        </ion-select>
-        <ion-button (click)="ApplyColor()">
-          <p>Apply</p>
-        </ion-button>
-      </ion-content>
-      
-    </ion-tab>
-
-    <ion-tab-bar slot="bottom">   
-      <ion-tab-button tab="discover">
-        <ion-icon name="wifi-outline"></ion-icon>
-        <ion-label> Discover </ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="control">
-        <ion-icon name="sunny-outline"></ion-icon>
-        <ion-label> Control Light </ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-
-</ion-tabs>-->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Homeability Home</ion-title>
+      <ion-button slot="end" (click)="Connect()">
+        <ion-icon name="Bluetooth"></ion-icon>
+        {{ble_btn_text}}
+      </ion-button>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-menu-toggle>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block"  disabled="{{ble_not_connected}}" (click)="GetLatestData()">John Smith</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" disabled="true">Mary Jane</ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" disabled="true">Steve Rogers</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" disabled="true">John Lackman</ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" disabled="true">Dona Brightwood</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" disabled="true">Selise Falcone</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-menu-toggle>
+  </ion-content>
+</div>
