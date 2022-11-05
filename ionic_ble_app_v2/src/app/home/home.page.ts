@@ -6,7 +6,6 @@ import { AlertController } from '@ionic/angular';
 
 // LIB docs: https://github.com/don/cordova-plugin-ble-central
 
-
 //const toastController = document.querySelector('ion-toast-controller');
 
 @Component({
@@ -30,10 +29,26 @@ export class HomePage {
   bpm_val = "None";
   bol_val = "None";
 
-  target = "D2:E8:AF:EE:B8:77";
+  bpm_valid = "None";
+  bol_valid = "None";
+  // target = "D2:E8:AF:EE:B8:77"; // ARDUINO NANO 33 BLE
+  target = "DE:84:1C:1C:7A:EB"; // SEEED XIAO BLE SENSE (final hardware)
+
+  device_service_uuid = "45c100-00a5-521b-3fc2-a103645c1283";
+  bpm_value_uuid = "45c100-01a5-521b-3fc2-a103645c1283";
+  bpm_valid_uuid = "45c100-02a5-521b-3fc2-a103645c1283";
+  bol_value_uuid = "45c100-03a5-521b-3fc2-a103645c1283";
+  bol_valid_uuid = "45c100-04a5-521b-3fc2-a103645c1283";
+
+  interval_inst: any;
+
 
   constructor(private ble: BLE, private ngZone: NgZone, public toastController: ToastController, private alertController: AlertController, private loadingController : LoadingController) {
-    
+    this.interval_inst = setInterval(()=> {
+      if(this.ble_not_connected == false) {
+        this.GetLatestData();
+      }
+    },1000);
   }
 
   Scan() {
@@ -57,6 +72,7 @@ export class HomePage {
       loading.present();
     } else {
       this.ble.disconnect(this.target);
+      clearInterval(this.interval_inst);
       this.toastController.create({
         color: 'dark',
         duration: 1000,
@@ -84,8 +100,27 @@ export class HomePage {
     this.x_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
     this.y_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
     this.z_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
-    this.bpm_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
-    this.bol_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+
+    var bpm_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bpm_valid_uuid));
+    var bol_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bol_valid_uuid));
+
+    var bpm_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bpm_value_uuid));
+    var bol_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bol_value_uuid));
+
+    this.bpm_valid = bpm_valid_data[0].toString();//bpm_valid_data.toString();
+    this.bol_valid = bol_valid_data[0].toString();
+    
+    if(this.bpm_valid == "1") {
+      this.bpm_val = bpm_value_data[0].toString();
+    } else {
+      this.bpm_val = "No Reading";
+    }
+
+    if(this.bol_valid == "1") {
+      this.bol_val = bol_value_data[0].toString() + "%";
+    } else {
+      this.bol_val = "No Reading";
+    }
 
   }
 
@@ -112,7 +147,7 @@ export class HomePage {
     const alert = await this.alertController.create({
       header: 'Connection Failed',
       subHeader: 'Arduino RGB',
-      message: 'Failed to Connect to device "Arduino RGB".',
+      message: 'lost Connection to Device.',
       buttons: ['OK'],
     });
 

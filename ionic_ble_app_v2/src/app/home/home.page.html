@@ -8,7 +8,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <div>Movement Data</div>
+          <div> <h3> Movement Data</h3></div>
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
@@ -24,16 +24,19 @@
         <div> Z: {{z_val}}</div>
       </ion-row>  
       <ion-row>
-        <div> Blood Pressure Data </div>
+        <div> <h3>Blood Pressure Data </h3> </div>
       </ion-row>
       <ion-row>
-        <div> BPM: {{bpm_val}}</div>
+        <div> Heartrate (BPM): <b>{{bpm_val}}</b></div>
       </ion-row>
       <ion-row>
-        <div> BOL: {{bol_val}}</div>
+        <div> Blood Oxygen Level: <b>{{bol_val}}</b></div>
+      </ion-row>
+      <ion-row>
+        <div> <p><i>Your Blood Oxygen level should be between 95 and 100% if you have healthy lungs.</i></p></div>
       </ion-row>
     </ion-grid>
-    <ion-button expand="block" (click)="GetLatestData()"> Refresh </ion-button>
+    <!--<ion-button expand="block" (click)="GetLatestData()"> Refresh </ion-button>-->
     <ion-menu-toggle>
       <ion-button>Click to return to menu</ion-button>
     </ion-menu-toggle>
