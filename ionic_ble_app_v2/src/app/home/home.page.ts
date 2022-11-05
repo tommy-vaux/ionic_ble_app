@@ -21,6 +21,7 @@ export class HomePage {
 
   ble_btn_text : string = "Connect";
   ble_not_connected : boolean = true; // needs to be 'true' to disable the components used.
+  interval_inst: any; // allows readings to be constantly taken.
 
   x_val = "None";
   y_val = "None";
@@ -32,6 +33,8 @@ export class HomePage {
   bpm_valid = "None";
   bol_valid = "None";
   // target = "D2:E8:AF:EE:B8:77"; // ARDUINO NANO 33 BLE
+
+  // CONSTANTS
   target = "DE:84:1C:1C:7A:EB"; // SEEED XIAO BLE SENSE (final hardware)
 
   device_service_uuid = "45c100-00a5-521b-3fc2-a103645c1283";
@@ -40,13 +43,14 @@ export class HomePage {
   bol_value_uuid = "45c100-03a5-521b-3fc2-a103645c1283";
   bol_valid_uuid = "45c100-04a5-521b-3fc2-a103645c1283";
 
-  interval_inst: any;
-
 
   constructor(private ble: BLE, private ngZone: NgZone, public toastController: ToastController, private alertController: AlertController, private loadingController : LoadingController) {
     this.interval_inst = setInterval(()=> {
       if(this.ble_not_connected == false) {
         this.GetLatestData();
+      } else {
+        this.bpm_val = "Disconnected";
+        this.bol_val = "Disconnected";
       }
     },1000);
   }
@@ -72,7 +76,7 @@ export class HomePage {
       loading.present();
     } else {
       this.ble.disconnect(this.target);
-      clearInterval(this.interval_inst);
+      //clearInterval(this.interval_inst);
       this.toastController.create({
         color: 'dark',
         duration: 1000,
@@ -94,34 +98,33 @@ export class HomePage {
   }
 
   async GetLatestData() {
-    var decoder = new TextDecoder("utf-8");
-    console.log("Getting Latest Data from device");
-    //this.ble.read(this.target, "1800","2A00")//.subscribe(respData => function(respData) { this.x_val = respData.value; }, function(respData) { this.x_val = "ERROR"; });
-    this.x_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
-    this.y_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
-    this.z_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
-
-    var bpm_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bpm_valid_uuid));
-    var bol_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bol_valid_uuid));
-
-    var bpm_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bpm_value_uuid));
-    var bol_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bol_value_uuid));
-
-    this.bpm_valid = bpm_valid_data[0].toString();//bpm_valid_data.toString();
-    this.bol_valid = bol_valid_data[0].toString();
-    
-    if(this.bpm_valid == "1") {
-      this.bpm_val = bpm_value_data[0].toString();
-    } else {
-      this.bpm_val = "No Reading";
-    }
-
-    if(this.bol_valid == "1") {
-      this.bol_val = bol_value_data[0].toString() + "%";
-    } else {
-      this.bol_val = "No Reading";
-    }
-
+      var decoder = new TextDecoder("utf-8");
+      console.log("Getting Latest Data from device");
+      //this.ble.read(this.target, "1800","2A00")//.subscribe(respData => function(respData) { this.x_val = respData.value; }, function(respData) { this.x_val = "ERROR"; });
+      this.x_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+      this.y_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+      this.z_val = decoder.decode(await this.ble.read(this.target, "1800","2A00"));
+  
+      var bpm_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bpm_valid_uuid));
+      var bol_valid_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid, this.bol_valid_uuid));
+  
+      var bpm_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bpm_value_uuid));
+      var bol_value_data = new Uint8Array(await this.ble.read(this.target, this.device_service_uuid,this.bol_value_uuid));
+  
+      this.bpm_valid = bpm_valid_data[0].toString();//bpm_valid_data.toString();
+      this.bol_valid = bol_valid_data[0].toString();
+      
+      if(this.bpm_valid == "1") {
+        this.bpm_val = bpm_value_data[0].toString();
+      } else {
+        this.bpm_val = "No Reading";
+      }
+  
+      if(this.bol_valid == "1") {
+        this.bol_val = bol_value_data[0].toString() + "%";
+      } else {
+        this.bol_val = "No Reading";
+      }
   }
 
 
@@ -144,6 +147,7 @@ export class HomePage {
     this.ble_not_connected = true;
     loading.dismiss();
     console.log("Connection Failed! ERROR: " + JSON.stringify(deviceData, null, 2));
+    this.ble_btn_text = "Connect"
     const alert = await this.alertController.create({
       header: 'Connection Failed',
       subHeader: 'Arduino RGB',
